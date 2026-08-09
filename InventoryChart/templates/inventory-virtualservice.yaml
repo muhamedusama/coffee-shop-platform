@@ -1,0 +1,15 @@
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: inventory-service
+spec:
+  hosts:
+    - "coffee-shop.local"
+  gateways:
+    - coffee-shop-gateway
+  http:
+    - route:
+        - destination:
+            host: inventory-service
+            port:
+              number: 8080

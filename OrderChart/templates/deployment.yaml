@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-service
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: order-service
+
+  template:
+    metadata:
+      labels:
+        app: order-service
+
+    spec:
+      containers:
+        - name: order-service
+
+          image: "mousama/order-service:latest"
+
+          ports:
+          - name: http
+            containerPort: 8888
+
+          - name: grpc
+            containerPort: 50051
+
+          env:
+            - name: REDIS_HOST
+              value: "redis"
+
+            - name: REDIS_PORT
+              value: "6379"
+
+            - name: REDIS_DB
+              value: "0"
+
+            - name: REDIS_PASSWORD
+              value: "password"
+
+            - name: RABBITMQ_HOST
+              value: rabbitmq
+
+            - name: RABBITMQ_USER
+              valueFrom:
+                  secretKeyRef:
+                    name: rabbitmq-secret
+                    key:  username
+
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                  secretKeyRef:
+                    name: rabbitmq-secret
+                    key: password
+
+            - name: ORDER_NOTIFICATION_QUEUE
+              value: order.notification.queue
+            - name: USER_SERVICE_BASE_URL
+              value: http://127.0.0.1:8000
+                  
+            - name: POSTGRES_DB
+              value: user-db
+
+            - name: DB_SERVICE
+              value: postgres
+
+            - name: POSTGRES_USER
+              valueFrom:
+                    secretKeyRef:
+                      name: postgres
+                      key: POSTGRES_USER
+
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                    secretKeyRef:
+                      name: postgres
+                      key: POSTGRES_PASSWORD

@@ -1,0 +1,15 @@
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: order-service
+spec:
+  hosts:
+    - "coffee-shop.local"
+  gateways:
+    - coffee-shop-gateway
+  http:
+    - route:
+        - destination:
+            host: order-service
+            port:
+              number: 8888

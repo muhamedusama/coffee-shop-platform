@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: user-service
+  labels:
+    app: user-service
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: user-service
+
+  template:
+    metadata:
+      labels:
+        app: user-service
+
+    spec:
+      containers:
+
+      - name: user-service
+
+        image: mousama/user-service:latest
+       
+
+        ports:
+
+        - name: http
+          containerPort: 8000
+
+        - name: grpc
+          containerPort: 50051
+        env:
+        - name: POSTGRES_USER
+          value: "postgres"
+
+        - name: POSTGRES_PASSWORD
+          value: "password"
+
+        - name: POSTGRES_DB
+          value: "user_db"
+
+        - name: DB_SERVICE
+          value: "postgres"
